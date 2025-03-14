@@ -6,31 +6,44 @@
     <title>Document</title>
 </head>
 <body>
-    <?php 
-        $name = "Petr";
-        $text = "Uživatel" ;
-    ?>
-
-    <h1>Moje první bolest</h1>
-    <p>Lorem ipsum dolor sit amet elit:<?php echo "$name Breit"; ?>
-    </p>
-    
-    <?php
-        echo "<h3>Proměná: $name</h3>"
-    ?>
+    <?php include "components/header.php"?>
 
     <?php
-        $i = 0;
+$servername = "localhost";
+$username = "root";
+$password = "root";
+$dbname = "první_databáze";
 
-        while($i <= 10){
-            echo "<h3> $text $i </h3>";
-            $i = $i + 2;
-        }
-        
-        for ($j = 0; $j <= 10; $j++) {
-            echo "The number is: $j <br>";
-          }
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
 
-    ?>
+$sql = "SELECT * FROM první_tabulka";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    echo  "<Table><tbody><tr>
+    <th>Id</th>
+    <th>Mixér</th>
+    <th>Čas než rozmixuje dítě</th>
+    <th>Cena</th></tr>";
+  while($row = $result->fetch_assoc()) {
+    echo  "<tr>".
+    "<td>".$row["ID"] . "</td>".
+    "<td>".$row["Typ_Mixeru"] ."</td>".
+    "<td>".$row["Čas_než_rozmixuje_dítě_sekundy"] . " s</td>".
+    "<td>".$row["Cena"]." Kč</td>" .
+    "</tr>";
+   
+  }
+  echo"</tbody></table>";
+} else {
+  echo "0 results";
+}
+$conn->close();
+?>
 </body>
 </html>
